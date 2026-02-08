@@ -3493,7 +3493,7 @@ BoxPokemon *Pokemon_GetBoxPokemon(Pokemon *mon)
     return &mon->box;
 }
 
-BOOL Pokemon_ShouldLevelUp(Pokemon *mon)
+BOOL Pokemon_ShouldLevelUp(Pokemon *mon, u8 badgeCount)
 {
     u16 monSpecies = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
     u8 monNextLevel = Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL) + 1;
@@ -3511,6 +3511,10 @@ BOOL Pokemon_ShouldLevelUp(Pokemon *mon)
     }
 
     maxExp = Pokemon_GetExpRateBaseExpAt(monExpRate, monNextLevel);
+    int maxLevel = BASE_LEVEL_CAP + (badgeCount * LEVEL_CAP_PER_BADGE);
+    if (monNextLevel > maxLevel) {
+        monExp = maxExp - 1;
+    }
 
     if (monExp >= maxExp) {
         Pokemon_SetValue(mon, MON_DATA_LEVEL, &monNextLevel);

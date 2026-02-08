@@ -144,6 +144,8 @@ static void Daycare_ShiftMonSlots(Daycare *daycare)
     }
 }
 
+#if !defined(BASE_LEVEL_CAP)
+
 static void ov5_021E63E0(Pokemon *param0)
 {
     int v0, v1 = 0, v2;
@@ -151,7 +153,7 @@ static void ov5_021E63E0(Pokemon *param0)
     u16 v4;
 
     for (v0 = 0; v0 < 100; v0++) {
-        if (Pokemon_ShouldLevelUp(param0)) {
+        if (Pokemon_ShouldLevelUp(param0, 0)) {
             v1 = 0;
 
             while ((v4 = Pokemon_LevelUpMove(param0, &v1, &v3)) != 0) {
@@ -167,6 +169,8 @@ static void ov5_021E63E0(Pokemon *param0)
     Pokemon_CalcLevelAndStats(param0);
 }
 
+#endif
+
 static int Daycare_MoveToPartyFromDaycareMon(Party *party, DaycareMon *daycareMon, StringTemplate *template)
 {
     Pokemon *mon = Pokemon_New(HEAP_ID_FIELD1);
@@ -179,12 +183,16 @@ static int Daycare_MoveToPartyFromDaycareMon(Party *party, DaycareMon *daycareMo
     species = BoxPokemon_GetValue(boxMon, MON_DATA_SPECIES, NULL);
     Pokemon_FromBoxPokemon(boxMon, mon);
 
+#if !defined(BASE_LEVEL_CAP)
+
     if (Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL) != MAX_POKEMON_LEVEL) {
         experience = Pokemon_GetValue(mon, MON_DATA_EXPERIENCE, NULL);
         experience += DaycareMon_GetSteps(daycareMon);
         Pokemon_SetValue(mon, MON_DATA_EXPERIENCE, (u8 *)&experience);
         ov5_021E63E0(mon);
     }
+
+#endif
 
     if (BoxPokemon_HoldsMail(boxMon)) {
         Pokemon_SetValue(mon, MON_DATA_MAIL, DaycareMail_GetMail(daycareMail));
@@ -884,17 +892,17 @@ static u8 Daycare_GetCompatibilityScore(Daycare *daycare)
 
 static const u16 sEggCycleSpecialDates[] = {
     (100 * 1 + 12), // Jan 1st, New Years
-    (100 * 2 + 14), // Feb 14th, Valentine's Day
-    (100 * 3 + 3), // March 3rd
-    (100 * 4 + 1), // April 1st, April Fools
-    (100 * 5 + 1), // May 1st, Emerald US release date
-    (100 * 6 + 11), // June 11th
-    (100 * 7 + 7), // July 7th
-    (100 * 8 + 21), // August 21st
-    (100 * 9 + 7), // September 7th
-    (100 * 9 + 28), // September 28th, Diamond/Pearl JP release date
-    (100 * 11 + 21), // November 21st, Ruby/Sapphire JP release date
-    (100 * 12 + 14), // December 14th, Crystal JP release date
+    100 * 2 + 14, // Feb 14th, Valentine's Day
+    100 * 3 + 3, // March 3rd
+    100 * 4 + 1, // April 1st, April Fools
+    100 * 5 + 1, // May 1st, Emerald US release date
+    100 * 6 + 11, // June 11th
+    100 * 7 + 7, // July 7th
+    100 * 8 + 21, // August 21st
+    100 * 9 + 7, // September 7th
+    100 * 9 + 28, // September 28th, Diamond/Pearl JP release date
+    100 * 11 + 21, // November 21st, Ruby/Sapphire JP release date
+    100 * 12 + 14, // December 14th, Crystal JP release date
 };
 
 static int Daycare_GetEggCycleLength(FieldSystem *fieldSystem)

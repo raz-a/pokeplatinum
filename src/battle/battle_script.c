@@ -10047,7 +10047,9 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
         break;
 
     case SEQ_GET_EXP_CHECK_LEVEL_UP:
-        if (Pokemon_ShouldLevelUp(mon)) {
+        TrainerInfo *trInfo = BattleSystem_TrainerInfo(data->battleSys, BATTLER_US);
+        if (Pokemon_ShouldLevelUp(mon, TrainerInfo_BadgeCount(trInfo))) {
+
             // Only play the special level-up animation for an active battler
             if (data->battleCtx->selectedPartySlot[expBattler] == slot) {
                 BattleController_EmitPlayStatusEffect(data->battleSys, data->battleCtx, expBattler, BATTLE_ANIMATION_LEVEL_UP);
