@@ -144,7 +144,7 @@ static void Daycare_ShiftMonSlots(Daycare *daycare)
     }
 }
 
-#if !defined(BASE_LEVEL_CAP)
+#if !defined(RAZ_BASE_LEVEL_CAP)
 
 static void ov5_021E63E0(Pokemon *param0)
 {
@@ -183,7 +183,7 @@ static int Daycare_MoveToPartyFromDaycareMon(Party *party, DaycareMon *daycareMo
     species = BoxPokemon_GetValue(boxMon, MON_DATA_SPECIES, NULL);
     Pokemon_FromBoxPokemon(boxMon, mon);
 
-#if !defined(BASE_LEVEL_CAP)
+#if !defined(RAZ_BASE_LEVEL_CAP)
 
     if (Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL) != MAX_POKEMON_LEVEL) {
         experience = Pokemon_GetValue(mon, MON_DATA_EXPERIENCE, NULL);

@@ -227,34 +227,57 @@ u8 Text_AddPrinter(const TextPrinterTemplate *template, u32 renderDelay, TextPri
 
 static void SysTask_RunTextPrinter(SysTask *task, void *data)
 {
-    if (sPausePrinter) {
-        return;
-    }
 
-    TextPrinter *printer = (TextPrinter *)data;
+    BOOL repeat = FALSE;
 
-    if (printer->callbackResult == 0) {
-        printer->callbackParam = 0;
-        Text_GenerateFontHalfRowLookupTable(printer->template.fgColor, printer->template.bgColor, printer->template.shadowColor);
+#if defined(RAZ_ALWAYS_INSTANT_TEXT)
 
-        switch (TextPrinter_Render(printer)) {
-        case RENDER_PRINT:
-            Window_CopyToVRAM(printer->template.window);
-            // fall-through
+    repeat = TRUE;
 
-        case RENDER_UPDATE:
-            if (printer->callback != NULL) {
-                printer->callbackResult = (printer->callback)(&printer->template, printer->callbackParam);
-            }
-            return;
+#endif
 
-        case RENDER_FINISH:
-            Text_DestroyPrinterTask(printer->id);
+    do {
+
+        if (sPausePrinter) {
             return;
         }
-    } else {
-        printer->callbackResult = (printer->callback)(&printer->template, printer->callbackParam);
-    }
+
+        TextPrinter *printer = (TextPrinter *)data;
+
+        if (printer->callbackResult == 0) {
+            printer->callbackParam = 0;
+            Text_GenerateFontHalfRowLookupTable(printer->template.fgColor, printer->template.bgColor, printer->template.shadowColor);
+
+            switch (TextPrinter_Render(printer)) {
+            case RENDER_PRINT:
+                Window_CopyToVRAM(printer->template.window);
+                // fall-through
+
+#if !defined(RAZ_ALWAYS_INSTANT_TEXT)
+
+            case RENDER_UPDATE:
+
+#endif
+
+                if (printer->callback != NULL) {
+                    printer->callbackResult = (printer->callback)(&printer->template, printer->callbackParam);
+                }
+
+                break;
+
+            case RENDER_FINISH:
+                Text_DestroyPrinterTask(printer->id);
+                return;
+
+            default:
+                return;
+            }
+
+        } else {
+            printer->callbackResult = (printer->callback)(&printer->template, printer->callbackParam);
+            return;
+        }
+    } while (repeat);
 }
 
 static enum RenderResult TextPrinter_Render(TextPrinter *printer)

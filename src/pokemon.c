@@ -3511,10 +3511,15 @@ BOOL Pokemon_ShouldLevelUp(Pokemon *mon, u8 badgeCount)
     }
 
     maxExp = Pokemon_GetExpRateBaseExpAt(monExpRate, monNextLevel);
-    int maxLevel = BASE_LEVEL_CAP + (badgeCount * LEVEL_CAP_PER_BADGE);
+
+#if defined(RAZ_BASE_LEVEL_CAP)
+
+    int maxLevel = RAZ_BASE_LEVEL_CAP + (badgeCount * RAZ_LEVEL_CAP_PER_BADGE);
     if (monNextLevel > maxLevel) {
         monExp = maxExp - 1;
     }
+
+#endif
 
     if (monExp >= maxExp) {
         Pokemon_SetValue(mon, MON_DATA_LEVEL, &monNextLevel);

@@ -22,6 +22,8 @@ typedef u32 TextColor;
 
 #define MAX_TEXT_PRINTERS 8
 
+#define RAZ_ALWAYS_INSTANT_TEXT 1
+
 #define TEXT_SPEED_INSTANT     0
 #define TEXT_SPEED_FAST        1
 #define TEXT_SPEED_QUICK       2

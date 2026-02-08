@@ -67,6 +67,13 @@ enum RenderResult RenderText(TextPrinter *printer)
         }
 
         printer->delayCounter = printer->textSpeedBottom;
+
+#if defined(RAZ_ALWAYS_INSTANT_TEXT)
+
+        printer->delayCounter = 0;
+
+#endif
+
         currChar = *printer->template.toPrint.raw;
         printer->template.toPrint.raw++;
 
