@@ -620,7 +620,7 @@ void Sound_AdjustVolumeForVoiceChatEx(int seqID, enum SoundHandleType handleType
     }
 
     if (sub_02036314() == TRUE) {
-        Sound_SetInitialVolumeForHandle(handleType, (volume / 5));
+        Sound_SetInitialVolumeForHandle(handleType, volume / 5);
     }
 }
 
@@ -946,7 +946,7 @@ BOOL Sound_StartReverb(int volume)
 {
     UNUSED(SoundSystem_Get());
     void *buffer = SoundSystem_GetParam(SOUND_SYSTEM_PARAM_CAPTURE_BUFFER);
-    return NNS_SndCaptureStartReverb(buffer, 0x1000, (NNS_SND_CAPTURE_FORMAT_PCM16), 16000, volume);
+    return NNS_SndCaptureStartReverb(buffer, 0x1000, NNS_SND_CAPTURE_FORMAT_PCM16, 16000, volume);
 }
 
 void Sound_StopReverb(int frames)
