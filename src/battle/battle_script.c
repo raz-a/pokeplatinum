@@ -10070,7 +10070,6 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
         break;
 
     case SEQ_GET_EXP_CHECK_LEVEL_UP:
-        TrainerInfo *trInfo = BattleSystem_TrainerInfo(data->battleSys, BATTLER_US);
         if (Pokemon_ShouldLevelUp(mon)) {
 
             // Only play the special level-up animation for an active battler
@@ -10138,12 +10137,12 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
 #if defined(RAZ_BASE_LEVEL_CAP)
 
         u8 level = Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL);
+        TrainerInfo *trInfo = BattleSystem_TrainerInfo(data->battleSys, BATTLER_US);
         u8 badgeCount = TrainerInfo_BadgeCount(trInfo);
         int maxLevel = RAZ_BASE_LEVEL_CAP + (badgeCount * RAZ_LEVEL_CAP_PER_BADGE);
 
-        BOOL FlewTooCloseTooTheSun = level > maxLevel
-        if (data->battleSys->battleType & BATTLE_TYPE_TRAINER)
-        {
+        BOOL FlewTooCloseTooTheSun = level > maxLevel;
+        if (data->battleSys->battleType & BATTLE_TYPE_TRAINER) {
             if (TrainerIsGymLeaderE4OrChampion(data->battleSys->trainers[1].header.trainerType) == TRUE ||
                 TrainerIsGymLeaderE4OrChampion(data->battleSys->trainers[3].header.trainerType) == TRUE)
             {
