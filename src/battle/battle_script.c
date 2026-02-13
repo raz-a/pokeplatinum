@@ -9900,6 +9900,29 @@ typedef struct PokemonStats {
     int stat[STAT_MAX];
 } PokemonStats;
 
+static BOOL TrainerIsGymLeaderE4OrChampion(u16 trainerClass)
+{
+    switch (trainerClass) {
+    case TRAINER_CLASS_LEADER_ROARK:
+    case TRAINER_CLASS_LEADER_GARDENIA:
+    case TRAINER_CLASS_LEADER_WAKE:
+    case TRAINER_CLASS_LEADER_MAYLENE:
+    case TRAINER_CLASS_LEADER_FANTINA:
+    case TRAINER_CLASS_LEADER_CANDICE:
+    case TRAINER_CLASS_LEADER_BYRON:
+    case TRAINER_CLASS_LEADER_VOLKNER:
+    case TRAINER_CLASS_ELITE_FOUR_AARON:
+    case TRAINER_CLASS_ELITE_FOUR_BERTHA:
+    case TRAINER_CLASS_ELITE_FOUR_FLINT:
+    case TRAINER_CLASS_ELITE_FOUR_LUCIAN:
+    case TRAINER_CLASS_CHAMPION_CYNTHIA:
+        return TRUE;
+        break;
+    }
+
+    return FALSE;
+}
+
 /**
  * @brief System task-state machine for controlling the UX flow for a battler
  * gaining Exp. Points.
