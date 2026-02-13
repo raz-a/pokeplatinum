@@ -10116,9 +10116,15 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
 
         u8 level = Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL);
         u8 badgeCount = TrainerInfo_BadgeCount(trInfo);
-
         int maxLevel = RAZ_BASE_LEVEL_CAP + (badgeCount * RAZ_LEVEL_CAP_PER_BADGE);
-        if (level > maxLevel) {
+
+        BOOL FlewTooCloseTooTheSun =
+            (level > maxLevel) &&
+            ((data->battleSys->battleType & BATTLE_TYPE_TRAINER) != 0) &&
+            (TrainerIsGymLeaderE4OrChampion(data->battleSys->trainers[1].header.trainerType) == FALSE) &&
+            (TrainerIsGymLeaderE4OrChampion(data->battleSys->trainers[3].header.trainerType) == FALSE);
+
+        if (FlewTooCloseTooTheSun) {
 
             if (data->battleCtx->selectedPartySlot[expBattler] == slot) {
                 data->battleCtx->battleMons[expBattler].curHP = 0;
