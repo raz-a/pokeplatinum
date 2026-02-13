@@ -10141,11 +10141,15 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
         u8 badgeCount = TrainerInfo_BadgeCount(trInfo);
         int maxLevel = RAZ_BASE_LEVEL_CAP + (badgeCount * RAZ_LEVEL_CAP_PER_BADGE);
 
-        BOOL FlewTooCloseTooTheSun =
-            (level > maxLevel) &&
-            ((data->battleSys->battleType & BATTLE_TYPE_TRAINER) != 0) &&
-            (TrainerIsGymLeaderE4OrChampion(data->battleSys->trainers[1].header.trainerType) == FALSE) &&
-            (TrainerIsGymLeaderE4OrChampion(data->battleSys->trainers[3].header.trainerType) == FALSE);
+        BOOL FlewTooCloseTooTheSun = level > maxLevel
+        if (data->battleSys->battleType & BATTLE_TYPE_TRAINER)
+        {
+            if (TrainerIsGymLeaderE4OrChampion(data->battleSys->trainers[1].header.trainerType) == TRUE ||
+                TrainerIsGymLeaderE4OrChampion(data->battleSys->trainers[3].header.trainerType) == TRUE)
+            {
+                FlewTooCloseTooTheSun = FALSE;
+            }
+        }
 
         if (FlewTooCloseTooTheSun) {
 
