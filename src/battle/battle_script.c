@@ -10048,7 +10048,7 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
 
     case SEQ_GET_EXP_CHECK_LEVEL_UP:
         TrainerInfo *trInfo = BattleSystem_TrainerInfo(data->battleSys, BATTLER_US);
-        if (Pokemon_ShouldLevelUp(mon, TrainerInfo_BadgeCount(trInfo))) {
+        if (Pokemon_ShouldLevelUp(mon)) {
 
             // Only play the special level-up animation for an active battler
             if (data->battleCtx->selectedPartySlot[expBattler] == slot) {
@@ -10111,6 +10111,42 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
         break;
 
     case SEQ_GET_EXP_LEVEL_UP_SUMMARY_LOAD_ICON:
+
+#if defined(RAZ_BASE_LEVEL_CAP)
+
+        u8 level = Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL);
+        u8 badgeCount = TrainerInfo_BadgeCount(trInfo);
+
+        int maxLevel = RAZ_BASE_LEVEL_CAP + (badgeCount * RAZ_LEVEL_CAP_PER_BADGE);
+        if (level > maxLevel) {
+
+            if (data->battleCtx->selectedPartySlot[expBattler] == slot) {
+                data->battleCtx->battleMons[expBattler].curHP = 0;
+                BattleMon_CopyToParty(data->battleSys, data->battleCtx, expBattler);
+
+                data->battleCtx->faintedMon = expBattler;
+                data->battleCtx->battleStatusMask |= (FlagIndex(expBattler) << SYSCTL_MON_FAINTED_SHIFT);
+                data->battleCtx->totalFainted[battler]++;
+
+                BattleController_EmitPlayFaintingSequence(data->battleSys, data->battleCtx, data->battleCtx->faintedMon);
+                data->battleCtx->battleStatusMask &= (FlagIndex(data->battleCtx->faintedMon) << SYSCTL_MON_FAINTED_SHIFT) ^ 0xFFFFFFFF;
+                data->battleCtx->battleStatusMask2 |= FlagIndex(data->battleCtx->faintedMon) << SYSCTL_PAYOUT_EXP_SHIFT;
+                data->battleCtx->battlerActions[data->battleCtx->faintedMon][BATTLE_ACTION_PICK_COMMAND] = BATTLE_CONTROL_MOVE_END;
+
+                BattleSystem_CleanupFaintedMon(data->battleSys, data->battleCtx, data->battleCtx->faintedMon);
+
+            } else {
+                u32 zero = 0;
+                Pokemon_SetValue(mon, MON_DATA_HP, &zero);
+                Sound_PlayPokemonCryEx(POKECRY_FAINT, Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL), 0, 127, HEAP_ID_FIELD1, Pokemon_GetValue(mon, MON_DATA_FORM, NULL));
+            }
+
+            data->seqNum = SEQ_GET_EXP_CHECK_DONE;
+            break;
+        }
+
+#endif
+
         // Load the Pokemon's Party icon if they are not the active battler
         if (data->battleCtx->selectedPartySlot[expBattler] != slot) {
             BattleScript_LoadPartyLevelUpIcon(data->battleSys, data, mon);

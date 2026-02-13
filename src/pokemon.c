@@ -3493,7 +3493,7 @@ BoxPokemon *Pokemon_GetBoxPokemon(Pokemon *mon)
     return &mon->box;
 }
 
-BOOL Pokemon_ShouldLevelUp(Pokemon *mon, u8 badgeCount)
+BOOL Pokemon_ShouldLevelUp(Pokemon *mon)
 {
     u16 monSpecies = Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL);
     u8 monNextLevel = Pokemon_GetValue(mon, MON_DATA_LEVEL, NULL) + 1;
@@ -3512,21 +3512,14 @@ BOOL Pokemon_ShouldLevelUp(Pokemon *mon, u8 badgeCount)
 
     maxExp = Pokemon_GetExpRateBaseExpAt(monExpRate, monNextLevel);
 
-#if defined(RAZ_BASE_LEVEL_CAP)
-
-    int maxLevel = RAZ_BASE_LEVEL_CAP + (badgeCount * RAZ_LEVEL_CAP_PER_BADGE);
-    if (monNextLevel > maxLevel) {
-        monExp = maxExp - 1;
-    }
-
-#endif
+    BOOL levelup = FALSE;
 
     if (monExp >= maxExp) {
         Pokemon_SetValue(mon, MON_DATA_LEVEL, &monNextLevel);
-        return TRUE;
+        levelup = TRUE;
     }
 
-    return FALSE;
+    return levelup;
 }
 
 u16 Pokemon_GetEvolutionTargetSpecies(Party *party, Pokemon *mon, u8 evoClass, u16 evoParam, int *evoTypeResult)
