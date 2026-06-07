@@ -207,7 +207,10 @@
     },
     {
       "id": "pl_msg_00000368_00030",
-      "en_US": "{STRVAR_1 1, 0, 0} FUCKING DIED!\r"
+      "en_US": [
+        "{STRVAR_1 1, 0, 0} died.\n",
+        "Rest in peace, {STRVAR_1 1, 0, 0}.\r"
+      ]
     },
     {
       "id": "pl_msg_00000368_00031",

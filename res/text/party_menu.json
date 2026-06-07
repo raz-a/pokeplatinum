@@ -585,10 +585,7 @@
     },
     {
       "id": "pl_msg_00000453_00114",
-      "en_US": [
-        "{STRVAR_1 1, 0, 0} has no energy left\n",
-        "to battle!"
-      ]
+      "en_US": "{STRVAR_1 1, 0, 0} is dead!"
     },
     {
       "id": "pl_msg_00000453_00115",
