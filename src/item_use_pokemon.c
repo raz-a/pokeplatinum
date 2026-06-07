@@ -303,18 +303,18 @@ u8 Pokemon_ApplyItemEffects(Pokemon *mon, u16 itemId, u16 moveSlot, u16 location
             effectApplied = TRUE;
         }
 
-#if defined(RAZ_BASE_LEVEL_CAP)
+        // #if defined(RAZ_BASE_LEVEL_CAP)
 
-        s32 zero = 0;
-        Pokemon_SetValue(mon, MON_DATA_HP, &zero);
-        Sound_PlayPokemonCryEx(POKECRY_DEATH,
-            Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL),
-            0,
-            127,
-            heapID,
-            Pokemon_GetValue(mon, MON_DATA_FORM, NULL));
+        //         s32 zero = 0;
+        //         Pokemon_SetValue(mon, MON_DATA_HP, &zero);
+        //         Sound_PlayPokemonCryEx(POKECRY_DEATH,
+        //             Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL),
+        //             0,
+        //             127,
+        //             heapID,
+        //             Pokemon_GetValue(mon, MON_DATA_FORM, NULL));
 
-#endif
+        // #endif
 
         effectFound = TRUE;
     }
