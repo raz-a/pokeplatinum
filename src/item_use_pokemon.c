@@ -290,8 +290,6 @@ u8 Pokemon_ApplyItemEffects(Pokemon *mon, u16 itemId, u16 moveSlot, u16 location
 
     if (Item_Get(item, ITEM_PARAM_LEVEL_UP)) {
 
-#if !defined(RAZ_BASE_LEVEL_CAP)
-
         if (vApplyLevel < MAX_POKEMON_LEVEL) {
             Pokemon_IncreaseValue(mon, MON_DATA_EXPERIENCE, Pokemon_GetExpToNextLevel(mon));
             Pokemon_CalcLevelAndStats(mon);
@@ -303,6 +301,11 @@ u8 Pokemon_ApplyItemEffects(Pokemon *mon, u16 itemId, u16 moveSlot, u16 location
 
             effectApplied = TRUE;
         }
+
+#if defined(RAZ_BASE_LEVEL_CAP)
+
+        s32 zero = 0;
+        Pokemon_SetValue(mon, MON_DATA_HP, &zero);
 
 #endif
 
