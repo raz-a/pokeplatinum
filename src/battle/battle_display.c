@@ -4728,13 +4728,16 @@ static void ov16_02262A9C(SysTask *param0, void *param1)
     case 4: {
         int v7;
 
+        int sound;
         if (v0->unk_67 == 2) {
             v7 = 117;
+            sound = POKECRY_FAINT;
         } else {
             v7 = -117;
+            sound = POKECRY_DEATH;
         }
 
-        Species_PlayDelayedCry(BattleSystem_ChatotVoice(v0->unk_00, v0->unk_65), 5, v0->unk_68, v0->unk_6B, v7, 127, v0->unk_72, 5, 0);
+        Species_PlayDelayedCry(BattleSystem_ChatotVoice(v0->unk_00, v0->unk_65), sound, v0->unk_68, v0->unk_6B, v7, 127, v0->unk_72, 5, 0);
         v0->unk_66++;
     }
     case 5:

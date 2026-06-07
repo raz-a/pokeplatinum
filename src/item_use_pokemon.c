@@ -16,6 +16,7 @@
 #include "move_table.h"
 #include "party.h"
 #include "pokemon.h"
+#include "sound_playback.h"
 
 #define PP_UP_REQUIREMENT 5 // Moves with fewer max PP can't benefit from PP Ups (e.g. Sketch)
 
@@ -306,6 +307,12 @@ u8 Pokemon_ApplyItemEffects(Pokemon *mon, u16 itemId, u16 moveSlot, u16 location
 
         s32 zero = 0;
         Pokemon_SetValue(mon, MON_DATA_HP, &zero);
+        Sound_PlayPokemonCryEx(POKECRY_DEATH,
+            Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL),
+            0,
+            127,
+            heapID,
+            Pokemon_GetValue(mon, MON_DATA_FORM, NULL));
 
 #endif
 

@@ -588,6 +588,13 @@ BOOL Sound_PlayPokemonCryEx(enum PokemonCryMod cryMod, u16 species, int pan, int
     case POKECRY_POKEDEX:
         Sound_PlayPokemonCry(species, form);
         break;
+    case POKECRY_DEATH:
+        Sound_PlayPokemonCry(species, form);
+        Sound_SetPanForHandle(SOUND_HANDLE_TYPE_POKEMON_CRY, SOUND_PLAYBACK_TRACK_ALL, pan);
+        Sound_Impl_SetPokemonCryVolume(species, SOUND_HANDLE_TYPE_POKEMON_CRY, volume);
+        Sound_SetPokemonCryDuration(10000, heapID);
+        Sound_SetPitchForHandle(SOUND_HANDLE_TYPE_POKEMON_CRY, SOUND_PLAYBACK_TRACK_ALL, SOUND_SEMITONES(-30));
+        break;
     }
 
     return TRUE;
@@ -801,7 +808,7 @@ BOOL Sound_PlayFanfare(u16 seqID)
 
     SoundSystem_SaveHeapState(SoundSystem_GetParam(SOUND_SYSTEM_PARAM_HEAP_STATE_FANFARE));
 
-    BOOL success = SoundSystem_LoadSequenceEx(seqID, (NNS_SND_ARC_LOAD_SEQ | NNS_SND_ARC_LOAD_BANK));
+    BOOL success = SoundSystem_LoadSequenceEx(seqID, NNS_SND_ARC_LOAD_SEQ | NNS_SND_ARC_LOAD_BANK);
     success = NNS_SndArcPlayerStartSeq(SoundSystem_GetSoundHandle(SOUND_HANDLE_TYPE_FANFARE), seqID);
 
     Sound_AdjustVolumeForVoiceChatEx(seqID, SOUND_HANDLE_TYPE_FANFARE);

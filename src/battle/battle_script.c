@@ -10143,9 +10143,7 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
 
         BOOL FlewTooCloseTooTheSun = level > maxLevel;
         if (data->battleSys->battleType & BATTLE_TYPE_TRAINER) {
-            if (TrainerIsGymLeaderE4OrChampion(data->battleSys->trainers[1].header.trainerType) == TRUE ||
-                TrainerIsGymLeaderE4OrChampion(data->battleSys->trainers[3].header.trainerType) == TRUE)
-            {
+            if (TrainerIsGymLeaderE4OrChampion(data->battleSys->trainers[1].header.trainerType) == TRUE || TrainerIsGymLeaderE4OrChampion(data->battleSys->trainers[3].header.trainerType) == TRUE) {
                 FlewTooCloseTooTheSun = FALSE;
             }
         }
@@ -10170,7 +10168,7 @@ static void BattleScript_GetExpTask(SysTask *task, void *inData)
             } else {
                 u32 zero = 0;
                 Pokemon_SetValue(mon, MON_DATA_HP, &zero);
-                Sound_PlayPokemonCryEx(POKECRY_FAINT, Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL), 0, 127, HEAP_ID_FIELD1, Pokemon_GetValue(mon, MON_DATA_FORM, NULL));
+                Sound_PlayPokemonCryEx(POKECRY_DEATH, Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL), 0, 127, HEAP_ID_FIELD1, Pokemon_GetValue(mon, MON_DATA_FORM, NULL));
             }
 
             data->seqNum = SEQ_GET_EXP_CHECK_DONE;
