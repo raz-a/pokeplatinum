@@ -3490,6 +3490,7 @@ u8 BoxPokemon_GetForm(BoxPokemon *boxMon)
 
 BoxPokemon *Pokemon_GetBoxPokemon(Pokemon *mon)
 {
+    mon->box.fainted = (mon->party.hp == 0);
     return &mon->box;
 }
 
@@ -4049,6 +4050,10 @@ void Pokemon_FromBoxPokemon(BoxPokemon *boxMon, Pokemon *mon)
     Pokemon_SetValue(mon, MON_DATA_BALL_CAPSULE, &v2);
 
     Pokemon_CalcLevelAndStats(mon);
+
+    if (mon->box.fainted) {
+        Pokemon_SetValue(mon, MON_DATA_HP, &zero); // stay dead
+    }
 }
 
 u8 Party_GetMaxLevel(Party *party)

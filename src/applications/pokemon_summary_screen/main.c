@@ -1181,7 +1181,17 @@ static void PlayMonCry(PokemonSummaryScreen *summaryScreen)
     if (summaryScreen->monData.species == SPECIES_CHATOT) {
         Sound_PlayDelayedChatotCry(summaryScreen->data->chatotCry, 0, 100, 0, cryDelay);
     } else {
-        Sound_PlayDelayedPokemonCry(summaryScreen->monData.species, cryDelay, summaryScreen->monData.form);
+        if (summaryScreen->monData.curHP == 0) {
+            Sound_PlayDelayedPokemonCryEx(POKECRY_DEATH,
+                summaryScreen->monData.species,
+                0,
+                SOUND_VOLUME_MAX,
+                HEAP_ID_FIELD2,
+                cryDelay,
+                summaryScreen->monData.form);
+        } else {
+            Sound_PlayDelayedPokemonCry(summaryScreen->monData.species, cryDelay, summaryScreen->monData.form);
+        }
     }
 }
 
