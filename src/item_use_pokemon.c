@@ -162,6 +162,10 @@ u8 Pokemon_CheckItemEffects(Pokemon *mon, u16 itemId, u16 moveSlot, enum HeapID 
         }
     }
 
+    if (Item_Get(item, ITEM_PARAM_LEVEL_UP)) {
+        return FALSE;
+    }
+
     if (Item_Get(item, ITEM_PARAM_HP_RESTORE)) {
         if (vCheckCurrentHP != 0 && vCheckCurrentHP < Pokemon_GetValue(mon, MON_DATA_MAX_HP, NULL)) {
             Heap_Free(item);
