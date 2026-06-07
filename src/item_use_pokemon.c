@@ -156,13 +156,13 @@ u8 Pokemon_CheckItemEffects(Pokemon *mon, u16 itemId, u16 moveSlot, enum HeapID 
 
     vCheckCurrentHP = Pokemon_GetValue(mon, MON_DATA_HP, NULL);
 
-    if ((Item_Get(item, ITEM_PARAM_REVIVE) || Item_Get(item, ITEM_PARAM_REVIVE_ALL))
-        && Item_Get(item, ITEM_PARAM_LEVEL_UP) == FALSE) {
+    if (Item_Get(item, ITEM_PARAM_REVIVE) || Item_Get(item, ITEM_PARAM_REVIVE_ALL)) {
         if (vCheckCurrentHP == 0) {
-            Heap_Free(item);
-            return TRUE;
+            return 2;
         }
-    } else if (Item_Get(item, ITEM_PARAM_HP_RESTORE)) {
+    }
+
+    if (Item_Get(item, ITEM_PARAM_HP_RESTORE)) {
         if (vCheckCurrentHP != 0 && vCheckCurrentHP < Pokemon_GetValue(mon, MON_DATA_MAX_HP, NULL)) {
             Heap_Free(item);
             return TRUE;
@@ -295,27 +295,10 @@ u8 Pokemon_ApplyItemEffects(Pokemon *mon, u16 itemId, u16 moveSlot, u16 location
             Pokemon_IncreaseValue(mon, MON_DATA_EXPERIENCE, Pokemon_GetExpToNextLevel(mon));
             Pokemon_CalcLevelAndStats(mon);
 
-            if (vApplyCurrentHP == 0) {
-                vApplyLevelUpMaxHP = Pokemon_GetValue(mon, MON_DATA_MAX_HP, NULL);
-                RestorePokemonHP(mon, vApplyCurrentHP, vApplyLevelUpMaxHP, vApplyLevelUpMaxHP - vApplyMaxHP);
-            }
-
             effectApplied = TRUE;
         }
 
-        // #if defined(RAZ_BASE_LEVEL_CAP)
-
-        //         s32 zero = 0;
-        //         Pokemon_SetValue(mon, MON_DATA_HP, &zero);
-        //         Sound_PlayPokemonCryEx(POKECRY_DEATH,
-        //             Pokemon_GetValue(mon, MON_DATA_SPECIES, NULL),
-        //             0,
-        //             127,
-        //             heapID,
-        //             Pokemon_GetValue(mon, MON_DATA_FORM, NULL));
-
-        // #endif
-
+        // TODO: Use RAZ_BASE_LEVEL_CAP to set level cap
         effectFound = TRUE;
     }
 

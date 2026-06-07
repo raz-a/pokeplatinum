@@ -2648,7 +2648,9 @@ static int ApplyItemEffectOnPokemon(PartyMenuApplication *app)
         return 6;
     }
 
-    if (Party_CheckItemEffectsOnMember(app->partyMenu->party, app->partyMenu->usedItemID, app->currPartySlot, 0, HEAP_ID_PARTY_MENU) == 1) {
+    u8 checkResult = Party_CheckItemEffectsOnMember(app->partyMenu->party, app->partyMenu->usedItemID, app->currPartySlot, 0, HEAP_ID_PARTY_MENU);
+    switch (checkResult) {
+    case 1: {
         Bag_TryRemoveItem(app->partyMenu->bag, app->partyMenu->usedItemID, 1, HEAP_ID_PARTY_MENU);
 
         if (Item_Get(itemData, ITEM_PARAM_EVOLVE) != 0) {
@@ -2666,10 +2668,20 @@ static int ApplyItemEffectOnPokemon(PartyMenuApplication *app)
         }
 
         sub_020852B8(app);
-    } else {
+        break;
+    }
+
+    case 2: {
+        PartyMenu_PrintLongMessage(app, pl_msg_00000453_00205, TRUE);
+        app->currPartySlot = 7;
+        app->unk_B00 = sub_02085348;
+        break;
+    }
+    default: {
         PartyMenu_PrintLongMessage(app, pl_msg_00000453_00105, TRUE);
         app->currPartySlot = 7;
         app->unk_B00 = sub_02085348;
+    }
     }
 
     Heap_Free(itemData);
