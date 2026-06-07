@@ -359,10 +359,23 @@ void PokemonSummaryScreen_LoadMonSprite(PokemonSummaryScreen *summaryScreen)
     summaryScreen->monSprite.sprite = PokemonSpriteManager_CreateSprite(summaryScreen->monSprite.spriteManager, &spriteTemplate, 52, 104, 0, 0, summaryScreen->monSprite.frames, NULL);
 
     PokemonSprite_SetAttribute(summaryScreen->monSprite.sprite, MON_SPRITE_FLIP_H, summaryScreen->monSprite.flip);
+
+    if (summaryScreen->monData.curHP == 0) {
+        PokemonSprite_SetAttribute(summaryScreen->monSprite.sprite, MON_SPRITE_FLIP_V, 1);
+        PokemonSprite_SetAttribute(summaryScreen->monSprite.sprite, MON_SPRITE_ALPHA, 0x18);
+        PokemonSprite_SetAttribute(summaryScreen->monSprite.sprite, MON_SPRITE_DIFFUSE_G, 6);
+        PokemonSprite_SetAttribute(summaryScreen->monSprite.sprite, MON_SPRITE_DIFFUSE_B, 6);
+        PokemonSprite_SetAttribute(summaryScreen->monSprite.sprite, MON_SPRITE_DIFFUSE_R, 6);
+    }
 }
 
 void PokemonSummaryScreen_LoadMonAnimation(PokemonSummaryScreen *summaryScreen)
 {
+
+    if (summaryScreen->monData.curHP == 0) {
+        return;
+    }
+
     if (summaryScreen->monData.isEgg != FALSE) {
         PokemonSprite_LoadAnim(summaryScreen->narcPlPokeData, summaryScreen->monSprite.monAnimMan, summaryScreen->monSprite.sprite, 0, 2, summaryScreen->monSprite.flip, 0);
     } else {

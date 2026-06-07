@@ -3867,6 +3867,7 @@ static void BoxAppMan_PickUpMon(BoxApplicationManager *boxAppMan, BoxApplication
         selection->cursorMonIsPartyMon = FALSE;
     } else {
         MI_CpuCopy32(cursor->mon, selection->boxMon, Pokemon_GetStructSize());
+        selection->boxMon->fainted = (Pokemon_GetValue((Pokemon *)cursor->mon, MON_DATA_HP, NULL) == 0);
         Party_RemovePokemonBySlotIndex(boxAppMan->party, cursor->posInParty);
         selection->cursorMonIsPartyMon = TRUE;
     }

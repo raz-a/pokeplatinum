@@ -3490,7 +3490,7 @@ u8 BoxPokemon_GetForm(BoxPokemon *boxMon)
 
 BoxPokemon *Pokemon_GetBoxPokemon(Pokemon *mon)
 {
-    mon->box.fainted = (mon->party.hp == 0);
+    mon->box.fainted = (Pokemon_GetValue(mon, MON_DATA_HP, NULL) == 0);
     return &mon->box;
 }
 
