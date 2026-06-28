@@ -1,4 +1,5 @@
 subdir('moves')
+subdir('party_list')
 
 healthbar_parts_embed = custom_target('healthbar_parts.4bpp.h',
     output: [
