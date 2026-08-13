@@ -13,6 +13,7 @@
 
 #include "heap.h"
 #include "item.h"
+#include "math_util.h"
 #include "move_table.h"
 #include "party.h"
 #include "pokemon.h"
@@ -128,6 +129,7 @@ static u8 IsMoveMissingPP(Pokemon *mon, u32 moveSlot);
 static u8 RestorePokemonMovePP(Pokemon *mon, u32 moveSlot, u32 amount);
 static u8 IncreaseMovePPUps(Pokemon *mon, u32 moveSlot, u32 amount);
 static void RestorePokemonHP(Pokemon *mon, u32 currentHp, u32 maxHp, u32 amount);
+static void RemovePokemonHP(Pokemon *mon);
 static s32 CalculateEVUpdate(s32 current, s32 sumOthers, s32 change);
 static u8 CheckFriendshipItemEffect(Pokemon *mon, ItemData *item);
 static u8 UpdatePokemonFriendship(Pokemon *mon, s32 current, s32 change, u16 location, enum HeapID heapID);
@@ -160,10 +162,6 @@ u8 Pokemon_CheckItemEffects(Pokemon *mon, u16 itemId, u16 moveSlot, enum HeapID 
         if (vCheckCurrentHP == 0) {
             return 2;
         }
-    }
-
-    if (Item_Get(item, ITEM_PARAM_LEVEL_UP)) {
-        return FALSE;
     }
 
     if (Item_Get(item, ITEM_PARAM_HP_RESTORE)) {
@@ -277,7 +275,7 @@ u8 Pokemon_ApplyItemEffects(Pokemon *mon, u16 itemId, u16 moveSlot, u16 location
         && Item_Get(item, ITEM_PARAM_LEVEL_UP)) {
 
         if (vApplyCurrentHP == 0) {
-            RestorePokemonHP(mon, vApplyCurrentHP, vApplyMaxHP, Item_Get(item, ITEM_PARAM_HP_RESTORED));
+            // RestorePokemonHP(mon, vApplyCurrentHP, vApplyMaxHP, Item_Get(item, ITEM_PARAM_HP_RESTORED));
             effectApplied = TRUE;
         }
 
@@ -298,6 +296,10 @@ u8 Pokemon_ApplyItemEffects(Pokemon *mon, u16 itemId, u16 moveSlot, u16 location
         if (vApplyLevel < MAX_POKEMON_LEVEL) {
             Pokemon_IncreaseValue(mon, MON_DATA_EXPERIENCE, Pokemon_GetExpToNextLevel(mon));
             Pokemon_CalcLevelAndStats(mon);
+
+            if ((LCRNG_Next() % 100) == 0) {
+                RemovePokemonHP(mon);
+            }
 
             effectApplied = TRUE;
         }
@@ -496,6 +498,12 @@ static void RestorePokemonHP(Pokemon *mon, u32 currentHP, u32 maxHP, u32 amount)
     }
 
     Pokemon_SetValue(mon, MON_DATA_HP, &currentHP);
+}
+
+static void RemovePokemonHP(Pokemon *mon)
+{
+    u32 zero = 0;
+    Pokemon_SetValue(mon, MON_DATA_HP, &zero);
 }
 
 static s32 CalculateEVUpdate(s32 current, s32 sumOthers, s32 change)
